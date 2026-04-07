@@ -5,30 +5,62 @@ public class PlayerOnMotorbikeController : MonoBehaviour
 {
     [SerializeField] float baseSpeed = 2;
     [SerializeField] float maxSpeed = 10;
+    [SerializeField] float verticalSpeed = 5f;
+
+    [SerializeField] float accelerationRate = 8f;
+    [SerializeField] float decelerationRate = 4f;
+
+    [SerializeField] float minY = -3f;
+    [SerializeField] float maxY = 3f;
+
     float currentSpeed;
     bool playerAcelerating;
+    float direction;
 
     public InputActionReference move;
     public InputActionReference accelerate;
-    private float direction;
 
-    // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
         currentSpeed = baseSpeed;
     }
 
-    // Update is called once per frame
-    void Update()
+    void OnEnable()
     {
-        direction = move.action.ReadValue<float>();
-        playerAcelerating = accelerate.action.IsPressed();
-        this.transform.Translate(new Vector2(1 * currentSpeed * Time.deltaTime , direction * maxSpeed * Time.deltaTime));
+        move.action.Enable();
+        accelerate.action.Enable();
     }
 
-    private void FixedUpdate()
+    void OnDisable()
     {
-        Debug.Log("DIRECTION"+ direction);
-        Debug.Log("accelerate"+ playerAcelerating);
+        move.action.Disable();
+        accelerate.action.Disable();
+    }
+
+    void Update()
+    {
+        // INPUT
+        direction = move.action.ReadValue<float>();
+        playerAcelerating = accelerate.action.IsPressed();
+
+        // ACCELERATION
+        float targetSpeed = playerAcelerating ? maxSpeed : baseSpeed;
+        float rate = playerAcelerating ? accelerationRate : decelerationRate;
+
+        currentSpeed = Mathf.MoveTowards(currentSpeed, targetSpeed, rate * Time.deltaTime);
+
+        // MOVEMENT
+        Vector3 movement = new Vector3(
+            currentSpeed * Time.deltaTime,
+            direction * verticalSpeed * Time.deltaTime,
+            0
+        );
+
+        transform.Translate(movement);
+
+        // CLAMP POSITION
+        Vector3 pos = transform.position;
+        pos.y = Mathf.Clamp(pos.y, minY, maxY);
+        transform.position = pos;
     }
 }
