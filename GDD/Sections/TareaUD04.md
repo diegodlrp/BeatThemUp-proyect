@@ -194,3 +194,6 @@ El diseño sonoro del nivel se estructura en función de las distintas fases del
 - BG: Ambiente más silencioso o centrado en sonidos cercanos, reduciendo la densidad sonora general.  
 - SFX: Interacciones básicas con el entorno y acciones del personaje a pie.  
 - FOL: Sonidos de pasos del personaje y movimiento a pie.  
+
+d.
+

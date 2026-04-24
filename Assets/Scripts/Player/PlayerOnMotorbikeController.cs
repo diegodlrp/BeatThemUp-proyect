@@ -1,7 +1,7 @@
 using UnityEngine;
 using UnityEngine.InputSystem;
 
-public class PlayerOnMotorbikeController : MonoBehaviour
+public class PlayerOnMotorbikeController : MonoBehaviour, IMovement
 {
     [SerializeField] float baseSpeed = 2;
     [SerializeField] float maxSpeed = 10;
@@ -62,5 +62,25 @@ public class PlayerOnMotorbikeController : MonoBehaviour
         Vector3 pos = transform.position;
         pos.y = Mathf.Clamp(pos.y, minY, maxY);
         transform.position = pos;
+    }
+
+    public float GetCurrentSpeed()
+    {
+        return this.currentSpeed;
+    }
+
+    public void SetEnabled(bool state)
+    {
+        this.enabled = state;
+    }
+
+    public float GetBaseSpeed()
+    {
+        return baseSpeed;
+    }
+
+    public bool IsAccelerating()
+    {
+        return playerAcelerating;
     }
 }
